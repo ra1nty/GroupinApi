@@ -4,13 +4,13 @@ exports.getUser = function(req, res, next){
 	const id = req.params.user_id;
     console.log(id);
     if (res.locals.userId == id){
-        User.findById(id, { password: 0 }, function (err, user){
+        User.findById(id, { password: 0 }).populate('projects' ,'name description').exec(function (err, user){
             if (err) return res.status(500).json({err : true, message:"Internal error"});
             if (!user) return res.status(404).json({err : true, message: "User not found"});
             return res.status(200).json(user);
         })
     }else{
-        User.findById(id, { password: 0, conversations: 0, email: 0}, function (err, user){
+        User.findById(id, { password: 0, conversations: 0, email: 0}).populate('projects' ,'name description').exec(function (err, user){
             if (err) return res.status(500).json({err : true, message:"Internal error"});
             if (!user) return res.status(404).json({err : true, message: "User not found"});
             return res.status(200).json(user);
@@ -36,7 +36,10 @@ exports.updateUser = function(req, res, next){
 }
 
 exports.getProfile = function(req, res, next){
-    User.findById(res.locals.userId, { password: 0 }).populate('projects' ,'name description').exec(function (err, user){
+    User.findById(res.locals.userId, { password: 0 })
+    .populate('projects' ,'name description createdAt popularity tags')
+    .populate({path : 'projects', populate: {path : 'tags', select : 'name'}})
+    .exec(function (err, user){
         if (err) return res.status(500).json({message: err});
         if (!user) return res.status(404).json({message: "User not found"});
         return res.status(200).json(user);

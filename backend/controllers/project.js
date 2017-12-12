@@ -115,6 +115,7 @@ module.exports.addProject = function (req, res, next){
 			}
 		})
 	}).catch(function(err){
+		console.log(err);
 		if(err){
 			return res.status(500).json({message:err});
 		}
