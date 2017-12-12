@@ -1,0 +1,4 @@
+{
+  "dbUri": "mongodb://testuser:testtset@ds135876.mlab.com:35876/groupin_api",
+  "secret": "5c5de2ffd50e1ac683d431e7d4918198"
+}
