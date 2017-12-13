@@ -58,7 +58,14 @@ module.exports.post = function(req, res) {
 }
 
 module.exports.getOne = function(req, res){
-	Tag.findById(req.params.id).populate('projects').exec(function(err, doc){
+	Tag.findById(req.params.id)
+		.populate({
+			path: 'projects',
+			populate: {
+				path: 'tags',
+				model: 'Tag'
+			}
+		}).exec(function(err, doc){
 		if (err) {
 			console.log(">>> Error (getOne)");
 			res.status(404).json({message : err['message'], data : []}); // mostly CastError
@@ -69,7 +76,8 @@ module.exports.getOne = function(req, res){
 			res.status(404).json({message : "Item Not Found", data : []});
 			return;
 		}
-		doc.populate('projects')
+		console.log(doc);
+		// doc.populate('projects')
 		res.status(200).json({message : "OK", data : doc});
 	});
 }

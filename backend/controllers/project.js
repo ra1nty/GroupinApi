@@ -61,6 +61,7 @@ module.exports.addProject = function (req, res, next){
 		"creator" : res.locals.userId,
 		"required_skills": req.body['required_skills'],
 	}
+
 	const new_project = Project(project_info);
 	new_project.save().then(function(project){
 		User.findByIdAndUpdate(res.locals.userId, {$push:{"projects": project._id }}, {new:true}, function(err, user){
@@ -121,6 +122,25 @@ module.exports.addProject = function (req, res, next){
 		}
 	})
 }
+
+module.exports.getPopularity = function(req, res){
+	console.log(req.params);
+	Project.findById(req.params.id, function(err, doc){
+		if (err) {
+			console.log(">>> Error getting popularity");
+			res.status(500).json({message: err['message'], data: []});
+		}
+
+		if (doc == null){
+			console.log(">>> Not found (getting popularity)");
+			return res.status(404).json({message : err['message'], data : []});
+		}
+
+		console.log(">>> Get popularity Success");
+		res.status(200).json({message: "OK", data: doc.popularity});
+	});
+}
+
 module.exports.updatePopularity = function(req, res){
 	Project.findByIdAndUpdate(req.params.id, { $inc: { popularity : 1}}, function(err, updated_doc){
 		if (err) {
@@ -168,7 +188,6 @@ module.exports.toggleStatus = function(req, res) {
 			return res.status(200).json({ message: "OK", data: updated_doc, });
 		});
 	});
-
 }
 
 module.exports.getOne = function(req, res){

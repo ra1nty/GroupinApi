@@ -1,7 +1,7 @@
 exports = module.exports = function(io) {  
   // Set socket.io listeners.
   io.on('connection', (socket) => {
-    //console.log('a user connected');
+    console.log('a user connected');
 
     // On conversation entry, join broadcast channel
     socket.on('enter conversation', (conversation) => {

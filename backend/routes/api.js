@@ -58,6 +58,9 @@ module.exports = function(router, passport) {
 
     router.put('/projects/:id/popularity', ProjectController.updatePopularity);
 
+    // modification
+    router.get('/projects/:id/popularity', ProjectController.getPopularity);
+
     router.put('/projects/:id/status', TokenModule.verifyToken, TokenModule.requireLogin, ProjectController.toggleStatus);
 
     router.get('/tags/', TagController.getAll);
