@@ -3,24 +3,40 @@ var Message = require('../models/message');
 var User = require('../models/user');
 
 exports.getConversations = function(req, res, next) {
+    console.log('get conversations');
+    var data = {};
     Conversation.find({participants : res.locals.userId})
-        .select('_id')
+        .select('_id project')
+        .populate('project', 'name')
         .exec(function(err, conversations){
             if(err){
                 res.status(500).json({err: true, message: err})
                 return next(err);
             }
+            console.log(conversations)
             let allConversations = []
             var promises = []
+            console.log(conversations);
             conversations.forEach(function(conversation){
+                var key = conversation._id;
+                var value = conversation.project? conversation.project.name : "Nullity";
+                data[key] = [value];
                 promises.push(Message.find({ conversationId : conversation._id })
-                    .sort([['-createdAt', 1]])
+                    .sort({'createdAt': -1})
+                    .limit(1)
                     .populate('sender', 'username')
                     .exec()
                 );
             })
             Promise.all(promises).then(function(messages){
-                return res.status(200).json(messages);
+                messages.forEach( (ms) => {
+                    var m = ms[0];
+                    if (m && m.conversationId) {
+                        console.log(data[m.conversationId]);
+                        data[m.conversationId].push(m);
+                    }
+                })
+                return res.status(200).json(data);
             }).catch(function(err){
                 console.log(err);
                 res.status(500).json({err: true, message: err});
@@ -64,6 +80,7 @@ exports.newConversation = function(req, res, next) {
             res.status(500).json({ error: true, message: err });
             return next(err);
         }
+        console.log(conv);
         targetConversation = null
         if (!conv){
             const conversation = new Conversation(conversationInfo);
@@ -92,6 +109,8 @@ exports.newConversation = function(req, res, next) {
     })
 
     function createMessage(targetConversation) {
+        console.log("create message");
+        console.log(targetConversation);
         const message = new Message({
             conversationId: targetConversation._id,
             body: req.body.content,
