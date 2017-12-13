@@ -45,7 +45,7 @@ module.exports = function(router, passport) {
     router.get('/chat/', TokenModule.verifyToken, TokenModule.requireLogin, ChatController.getConversations);
 
     router.get('/chat/:conversation_id', TokenModule.verifyToken, TokenModule.requireLogin, ChatController.getConversation);
-
+    
     router.post('/chat/:conversation_id', TokenModule.verifyToken, TokenModule.requireLogin, ChatController.newMessage);
 
     router.post('/chat/new/:to', TokenModule.verifyToken, TokenModule.requireLogin, ChatController.newConversation);

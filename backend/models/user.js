@@ -10,9 +10,9 @@ var userSchema = mongoose.Schema({
     projects : [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
     skills      : [{ type: String }],
     conversations: [{type: mongoose.Schema.Types.ObjectId, ref: 'Conversation'}],
-
-    /*add for socket*/
-    new_message : [mongoose.Schema.Types.ObjectId],
+    messages : [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
+    // /*add for socket*/
+    // new_message : [mongoose.Schema.Types.ObjectId],
 });
 
 userSchema.methods.generateHash = function(password) {

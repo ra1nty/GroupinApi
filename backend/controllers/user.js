@@ -37,6 +37,7 @@ exports.updateUser = function(req, res, next){
 
 exports.getProfile = function(req, res, next){
     User.findById(res.locals.userId, { password: 0 })
+    .populate('conversations')
     .populate('projects' ,'name description createdAt popularity tags')
     .populate({path : 'projects', populate: {path : 'tags', select : 'name'}})
     .exec(function (err, user){

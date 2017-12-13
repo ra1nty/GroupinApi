@@ -14,7 +14,6 @@ exports.getConversations = function(req, res, next) {
             conversations.forEach(function(conversation){
                 Message.find({ conversationId : conversation._id })
                     .sort('-createdAt')
-                    .limit(1)
                     .populate('sender', 'username')
                     .exec(function(err, message){
                         if (err) {
@@ -52,6 +51,7 @@ exports.newConversation = function(req, res, next) {
         res.status(422).json({ error: 'Please enter a message.' });
         return next();
     }
+
     var conversationInfo = {
         participants: [res.locals.userId, req.params.to],
         project: req.body.projectId
