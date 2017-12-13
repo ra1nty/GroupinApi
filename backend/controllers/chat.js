@@ -61,8 +61,6 @@ exports.newConversation = function(req, res, next) {
     Conversation.findOne(conversationInfo).exec(function(err, conv){
         if (err){
             res.status(500).json({ error: true, message: err });
-            // console.log("when findone");
-            // console.log(err);
             return next(err);
         }
         targetConversation = null
@@ -71,8 +69,6 @@ exports.newConversation = function(req, res, next) {
             conversation.save(function(err, newConversation) {
                 if (err) {
                     res.status(500).json({ error: true, message: err });
-                    // console.log("when save conversation");
-                    // console.log(err);
                     return next(err);
                 }
                 targetConversation = newConversation;
@@ -94,8 +90,6 @@ exports.newConversation = function(req, res, next) {
         message.save(function(err, newMessage) {
             if (err) {
                 res.status(500).json({ error: true, message: err });
-                // console.log("when save message");
-                // console.log(err);
                 return next(err);
             }
             res.status(200).json(newMessage);
