@@ -32,8 +32,8 @@ app.use('/api', require('./backend/routes/api')(router, passport));
 // start the server
 
 // modification
-let server = app.listen(8000, () => {
-  console.log('Server is running on http://localhost:8000 or http://127.0.0.1:8000');
+let server = app.listen(process.env.PORT || 8000, () => {
+  console.log('Server is running!');
 });
 
 const io = require('socket.io').listen(server);
