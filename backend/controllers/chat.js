@@ -14,7 +14,7 @@ exports.getConversations = function(req, res, next) {
             var promises = []
             conversations.forEach(function(conversation){
                 promises.push(Message.find({ conversationId : conversation._id })
-                    .sort('-createdAt')
+                    .sort([['-createdAt', 1]])
                     .populate('sender', 'username')
                     .exec()
                 );
