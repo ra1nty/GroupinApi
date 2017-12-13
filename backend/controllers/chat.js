@@ -42,7 +42,8 @@ exports.getConversation = function(req, res, next) {
         });
 }
 
-exports.newConversation = function(req, res, next) {  
+exports.newConversation = function(req, res, next) {
+    console.log("add new conversation");
     if(!req.params.to) {
         res.status(422).json({ error: 'Need a valid recipient for your message.' });
         return next();
@@ -51,42 +52,57 @@ exports.newConversation = function(req, res, next) {
         res.status(422).json({ error: 'Please enter a message.' });
         return next();
     }
-    conversationInfo = {
+    var conversationInfo = {
         participants: [res.locals.userId, req.params.to],
         project: req.body.projectId
     }
-    conversation.findOne(conversationInfo).exec(function(err, conv){
+
+    var targetConversation;
+    Conversation.findOne(conversationInfo).exec(function(err, conv){
         if (err){
             res.status(500).json({ error: true, message: err });
+            // console.log("when findone");
+            // console.log(err);
             return next(err);
         }
-        var targetConversation = null
+        targetConversation = null
         if (!conv){
             const conversation = new Conversation(conversationInfo);
             conversation.save(function(err, newConversation) {
                 if (err) {
                     res.status(500).json({ error: true, message: err });
+                    // console.log("when save conversation");
+                    // console.log(err);
                     return next(err);
                 }
                 targetConversation = newConversation;
+                createMessage(targetConversation);
             })
+            
         }else{
             targetConversation = conv;
+            createMessage(targetConversation);
         }
     })
-    const message = new Message({
-        conversationId: targetConversation._id,
-        body: req.body.content,
-        sender: res.locals.userId
-    });
-    message.save(function(err, newMessage) {
-        if (err) {
-            res.status(500).json({ error: true, message: err });
-            return next(err);
-        }
-        res.status(200).json(newMessage);
-        return next();
-    });
+
+    function createMessage(targetConversation) {
+        const message = new Message({
+            conversationId: targetConversation._id,
+            body: req.body.content,
+            sender: res.locals.userId
+        });
+        message.save(function(err, newMessage) {
+            if (err) {
+                res.status(500).json({ error: true, message: err });
+                // console.log("when save message");
+                // console.log(err);
+                return next(err);
+            }
+            res.status(200).json(newMessage);
+            return next();
+        });
+    }
+   
 }
 
 exports.newMessage = function(req, res, next){

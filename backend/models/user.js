@@ -9,7 +9,10 @@ var userSchema = mongoose.Schema({
     wechat_id   : { type: String, default: '' },
     projects : [{type: mongoose.Schema.Types.ObjectId, ref: 'Project'}],
     skills      : [{ type: String }],
-    conversations: [{type: mongoose.Schema.Types.ObjectId, ref: 'Conversation'}]
+    conversations: [{type: mongoose.Schema.Types.ObjectId, ref: 'Conversation'}],
+
+    /*add for socket*/
+    new_message : [mongoose.Schema.Types.ObjectId],
 });
 
 userSchema.methods.generateHash = function(password) {
