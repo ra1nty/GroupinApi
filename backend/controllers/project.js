@@ -50,7 +50,20 @@ module.exports.getAll = function(req, res) {
 	if ("count" in req.query && req.query.count == true){ // console.log("count track");
 		Project.count(req.query["where"], callback(res)); 
 	}else{ // console.log("find track");
-		Project.find(req.query["where"], null, req.query).populate('creator', 'username').populate('tags', 'name').exec(callback(res))
+		Project.find(req.query["where"], null, req.query)
+		.populate({
+			path: 'tags', 
+			path: 'name', 
+			path: 'creator',
+			populate: {
+				path: 'username',
+				model: 'User'
+			}
+		})
+		.exec(callback(res))
+// =======
+// 		Project.find(req.query["where"], null, req.query).populate('creator', 'username').populate('tags', 'name').exec(callback(res))
+// >>>>>>> 5d44c8eeedb191598964fb3ff211a13b9c9676c0
 	}
 }
 

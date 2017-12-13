@@ -49,6 +49,7 @@ exports = module.exports = function(io) {
 
     // Receive 'new message', need to push notification
     socket.on('new message', (conversation, recipient) => {
+      console.log("Receive new message");
       // If the user is online, push notification
       if (clients[recipient]){
         socket.broadcast.to(clients[recipient].getSocketId()).emit('refresh messages', conversation);
@@ -56,9 +57,15 @@ exports = module.exports = function(io) {
       }
 
       // If the user is offline, update the user data
-      User.findByIdAndUpdate(recipient, {"new_message" : true,}, {new: true, select:{"password":0}},function(err, user){
-        if(err) console.log("Error updating recipient new_message"); 
-      });
+      User.findById(recipient)
+      .then((doc) => {
+        if (doc) {
+          var conv = doc.conversations;
+          conv.push(conversation);
+          doc.set({"conversations":conv});
+        }
+      })
+      .catch((err) => console.log(err));
     });
 
     socket.on('disconnect', () => {
