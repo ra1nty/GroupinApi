@@ -18,7 +18,7 @@ exports.getConversations = function(req, res, next) {
                     .populate('sender', 'username')
                     .exec()
                     );
-            }
+            })
             Promise.all(promises).then(function(err, messages){
                 if (err) {
                     return res.status(500).json({err: true, message: err});
