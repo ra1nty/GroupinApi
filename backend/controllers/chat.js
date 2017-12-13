@@ -34,7 +34,7 @@ exports.getConversation = function(req, res, next) {
         .sort('-createdAt')
         .populate('sender','username')
         .exec().then(function(messages) {
-            res.status(200).json({ data : messages });
+            res.status(200).json(messages);
         }).catch(function(err){
                 return res.status(500).json({err: true, message: err});
         });
