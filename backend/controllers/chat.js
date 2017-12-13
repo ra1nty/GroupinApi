@@ -19,11 +19,11 @@ exports.getConversations = function(req, res, next) {
                     .exec()
                     );
             })
-            Promise.all(promises).then(function(err, messages){
-                if (err) {
-                    return res.status(500).json({err: true, message: err});
-                }
+            Promise.all(promises).then(function(messages){
                 return res.status(200).json(messages);
+            }).catch(function(err){
+                console.log(err);
+                res.status(500).json({err: true, message: err});
             })
         })
 }
