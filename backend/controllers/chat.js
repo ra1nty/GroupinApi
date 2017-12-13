@@ -11,19 +11,20 @@ exports.getConversations = function(req, res, next) {
                 return next(err);
             }
             let allConversations = []
+            let promises = []
             conversations.forEach(function(conversation){
-                Message.find({ conversationId : conversation._id })
+                promises.push(Message.find({ conversationId : conversation._id })
                     .sort('-createdAt')
                     .populate('sender', 'username')
-                    .exec(function(err, message){
-                        if (err) {
-                            res.status(500).json({err: true, message: err});
-                            return next(err);
-                        }
-                        allConversations.push(message);
-                    })
+                    .exec()
+                    );
+            }
+            Promise.all(promises).then(function(err, messages){
+                if (err) {
+                    return res.status(500).json({err: true, message: err});
+                }
+                return res.status(200).json(messages);
             })
-            return res.status(200).json(allConversations)
         })
 }
 
