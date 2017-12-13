@@ -68,9 +68,18 @@ exports.newConversation = function(req, res, next) {
             const conversation = new Conversation(conversationInfo);
             conversation.save(function(err, newConversation) {
                 if (err) {
-                    res.status(500).json({ error: true, message: err });
-                    return next(err);
+                    return res.status(500).json({ error: true, message: err });
                 }
+                User.findByIdAndUpdate(res.locals.userId, {$addToSet: {conversations: newConversation._id}}, function(err){
+                    if(err){
+                        res.status(500).json({ error: true, message: err });
+                    }
+                })
+                User.findByIdAndUpdate(req.params.to, {$addToSet: {conversations: newConversation._id}}, function(err){
+                    if(err){
+                        res.status(500).json({ error: true, message: err });
+                    }
+                })
                 targetConversation = newConversation;
                 createMessage(targetConversation);
             })
