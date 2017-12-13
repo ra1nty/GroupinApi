@@ -50,7 +50,7 @@ module.exports.getAll = function(req, res) {
 	if ("count" in req.query && req.query.count == true){ // console.log("count track");
 		Project.count(req.query["where"], callback(res)); 
 	}else{ // console.log("find track");
-		Project.find(req.query["where"], null, req.query).populate('creator', 'name').populate('tags', 'name').exec(callback(res))
+		Project.find(req.query["where"], null, req.query).populate('creator', 'username').populate('tags', 'name').exec(callback(res))
 	}
 }
 
