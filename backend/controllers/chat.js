@@ -38,7 +38,7 @@ exports.getConversation = function(req, res, next) {
                 res.status(500).json({err: true, message: err});
                 return next(err);
             }
-            res.status(200).json(messages);
+            res.status(200).json({ data : messages });
         });
 }
 
