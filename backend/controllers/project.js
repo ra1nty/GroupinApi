@@ -148,11 +148,11 @@ module.exports.updatePopularity = function(req, res){
 	Project.findByIdAndUpdate(req.params.id, { $inc: { popularity : 1}}, function(err, updated_doc){
 		if (err) {
 			console.log(">>> Error (update popularity)");
-			return res.status(500).json({message : err['message'], data : []}); // mostly CastError
+			return res.status(500).json({message : err, data : []}); // mostly CastError
 		}
 		if (updated_doc == null){
 			console.log(">>> Not found (update popularity)");
-			return res.status(404).json({message : err['message'], data : []}); // mostly CastError
+			return res.status(404).json({message : err, data : []}); // mostly CastError
 		}
 		console.log(">>> Update Success");
 		console.log(updated_doc);
