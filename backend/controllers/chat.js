@@ -33,7 +33,7 @@ exports.getConversation = function(req, res, next) {
         .select('createdAt body sender')
         .sort('-createdAt')
         .populate('sender','username')
-        .exec(function(err, messages) {
+        .exec().then(function(messages) {
             if (err) {
                 res.status(500).json({err: true, message: err});
                 return next(err);
