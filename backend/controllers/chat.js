@@ -39,7 +39,7 @@ exports.getConversations = function(req, res, next) {
                 return res.status(200).json(data);
             }).catch(function(err){
                 console.log(err);
-                res.status(500).json({err: true, message: err});
+                return res.status(500).json({err: true, message: err});
             })
         })
 }
@@ -49,12 +49,10 @@ exports.getConversation = function(req, res, next) {
         .select('createdAt body sender')
         .sort('-createdAt')
         .populate('sender','username')
-        .exec(function(err, messages) {
-            if (err) {
-                res.status(500).json({err: true, message: err});
-                return next(err);
-            }
+        .exec().then(function(messages) {
             res.status(200).json(messages);
+        }).catch(function(err){
+                return res.status(500).json({err: true, message: err});
         });
 }
 

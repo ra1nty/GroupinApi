@@ -59,11 +59,12 @@ exports = module.exports = function(io) {
       // If the user is offline, update the user data
       User.findById(recipient)
       .then((doc) => {
-        if (doc) {
-          var conv = doc.conversations;
-          conv.push(conversation);
-          doc.set({"conversations":conv});
-        }
+        var conv = doc.conversations;
+        conv.push(conversation);
+        doc.set({
+          "conversations" : conv,
+        })
+        doc.save();
       })
       .catch((err) => console.log(err));
     });
