@@ -11,13 +11,13 @@ exports.getConversations = function(req, res, next) {
                 return next(err);
             }
             let allConversations = []
-            let promises = []
+            var promises = []
             conversations.forEach(function(conversation){
                 promises.push(Message.find({ conversationId : conversation._id })
                     .sort('-createdAt')
                     .populate('sender', 'username')
                     .exec()
-                    );
+                );
             })
             Promise.all(promises).then(function(messages){
                 return res.status(200).json(messages);
