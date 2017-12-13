@@ -33,7 +33,8 @@ exports.getConversations = function(req, res, next) {
                     var m = ms[0];
                     if (m && m.conversationId) {
                         console.log(data[m.conversationId]);
-                        data[m.conversationId].push(m);
+                        if (m.sender._id != res.locals.userId)
+                            data[m.conversationId].push(m);
                     }
                 })
                 return res.status(200).json(data);
