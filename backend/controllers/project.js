@@ -61,6 +61,9 @@ module.exports.getAll = function(req, res) {
 			}
 		})
 		.exec(callback(res))
+// =======
+// 		Project.find(req.query["where"], null, req.query).populate('creator', 'username').populate('tags', 'name').exec(callback(res))
+// >>>>>>> 5d44c8eeedb191598964fb3ff211a13b9c9676c0
 	}
 }
 
@@ -201,7 +204,7 @@ module.exports.toggleStatus = function(req, res) {
 }
 
 module.exports.getOne = function(req, res){
-	Project.findOne({ '_id' : req.params.id}).populate('tags','name', 'creator').exec(function(err, doc){
+	Project.findOne({ '_id' : req.params.id}).populate('creator','username').populate('tags','name').exec(function(err, doc){
 		if (err) {
 			console.log(">>> Error (getOne)");
 			return res.status(500).json({message : err['message'], data : []}); 
