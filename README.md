@@ -1,4 +1,4 @@
-# GroupIn API
+# Instassist API
 * API Summary
 * API Documentation
 * Query
@@ -10,7 +10,6 @@
 | /projects             | GET     | Respond with a list of projects (see query) |
 | /projects             | POST    | Create a new sproject. Respond with details of new project |
 | /projects/:id         | GET     | Respond with details of specified project or 404 error |
-| ~~/projects/:id~~         | ~~DELETE~~  | ~~Delete specified project or 404 error *(may have effect on tags)*~~ |
 | /projects/:id/popularity    | PUT     | **Increment** project's popularity by 1 |
 | /projects/:id/status    | PUT     | **Toggle** project's status |
 | /tags | GET  |  Get a tag list |
@@ -123,7 +122,7 @@ If posting a new project with tag_names
 | Endpoints             | Actions | Note                                                |
 |-----------------------|---------|-----------------------------------------------------|
 | projects/:id         | GET     | Respond with details of specified project or 404 error |
-| ~~projects/:id~~         | ~~DELETE~~  | ~~Delete specified project or 404 error~~ |
+
 #### GET
 Nothing to elaborate.
 ##### Error
